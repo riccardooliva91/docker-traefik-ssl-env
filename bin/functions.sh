@@ -22,6 +22,7 @@ function docker_compose_up() {
 	if [[ -e "${ABSPATH}/traefik/traefik.yml" ]]; then
 	  rm "${ABSPATH}/traefik/traefik.yml"
   fi
+
   cp "${ABSPATH}/traefik/traefik.yml.example" "${ABSPATH}/traefik/traefik.yml"
 	replace_in_file "s#dashboard: .*#dashboard: ${TRAEFIK_DASHBOARD}#" "${ABSPATH}/traefik/traefik.yml"
 	replace_in_file "s#insecure: .*#insecure: ${TRAEFIK_DASHBOARD_INSECURE}#" "${ABSPATH}/traefik/traefik.yml"
@@ -32,6 +33,12 @@ function docker_compose_up() {
 
 	for FOLDER in $FOLDERS
 	do
+	  if [[ -e "$FOLDER/docker-compose.yml" ]]; then
+	    rm "$FOLDER/docker-compose.yml"
+    fi
+    cp "$FOLDER/docker-compose.yml.example" "$FOLDER/docker-compose.yml"
+    replace_in_file "s#name: WEBNETWORKNAME#name: ${NETWORK_NAME}#" "$FOLDER/docker-compose.yml"
+
 		docker-compose -f $FOLDER/docker-compose.yml up -d --remove-orphans --build
 	done
 }

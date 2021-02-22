@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  traefik:
+    image: traefik:2.4.5
+    expose:
+      - 80
+      - 443
+      - 8080
+    volumes:
+      - ./traefik.yml:/etc/traefik/traefik.yml
+      - /var/run/docker.sock:/var/run/docker.sock
+
+networks:
+  default:
+    external:
+      name: WEBNETWORKNAME
