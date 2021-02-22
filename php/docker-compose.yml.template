@@ -9,7 +9,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.hwphp.rule=Host(`hwphp.local`)"
-      - "traefik.http.routers.hwphp.entrypoints=web"
+      - "traefik.http.routers.hwphp.entrypoints=websecure"
+      - "traefik.http.routers.hwphp.tls=true"
       - "traefik.http.services.hwphp.loadbalancer.server.port=80"
       - "traefik.tcp.services.hwphp.loadbalancer.server.port=443"
     links:
