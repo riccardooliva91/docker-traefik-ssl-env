@@ -14,23 +14,24 @@ function replace_in_file() {
 }
 
 function docker_compose_up() {
-	local USER_ID=$(id -u)
-	local GROUP_ID=$(id -g)
-
+  # Env replaces
 	replace_in_file "s#USER_ID=.*#USER_ID=${USER_ID}#" "${ABSPATH}/.env"
 	replace_in_file "s#GROUP_ID=.*#GROUP_ID=${GROUP_ID}#" "${ABSPATH}/.env"
 	if [[ -e "${ABSPATH}/traefik/traefik.yml" ]]; then
 	  rm "${ABSPATH}/traefik/traefik.yml"
   fi
 
+  # Traefik template preparation
   cp "${ABSPATH}/traefik/traefik.yml.template" "${ABSPATH}/traefik/traefik.yml"
 	replace_in_file "s#dashboard: .*#dashboard: ${TRAEFIK_DASHBOARD}#" "${ABSPATH}/traefik/traefik.yml"
 	replace_in_file "s#insecure: .*#insecure: ${TRAEFIK_DASHBOARD_INSECURE}#" "${ABSPATH}/traefik/traefik.yml"
 
+  # Create network if needed
 	if [[ -z "$(docker network ls -q -f name=$NETWORK_NAME)" ]]; then
 		docker network create $NETWORK_NAME
 	fi
 
+  # Bring up projects
 	for FOLDER in $FOLDERS
 	do
 	  if [[ -e "$FOLDER/docker-compose.yml" ]]; then
