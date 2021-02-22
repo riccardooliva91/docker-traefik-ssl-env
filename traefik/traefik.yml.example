@@ -1,0 +1,9 @@
+# Docker configuration backend
+providers:
+  docker:
+    defaultRule: "Host(`{{ trimPrefix `/` .Name }}.docker.localhost`)"
+
+# API and dashboard configuration
+api:
+  dashboard: TRAEFIK_DASHBOARD
+  insecure: TRAEFIK_DASHBOARD_INSECURE
