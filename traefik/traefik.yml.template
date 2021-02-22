@@ -2,8 +2,19 @@
 providers:
   docker:
     defaultRule: "Host(`{{ trimPrefix `/` .Name }}.docker.localhost`)"
+    exposedByDefault: true
 
 # API and dashboard configuration
 api:
   dashboard: TRAEFIK_DASHBOARD
   insecure: TRAEFIK_DASHBOARD_INSECURE
+
+# Logging
+accessLog: {}
+
+# Web entrypoints
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"

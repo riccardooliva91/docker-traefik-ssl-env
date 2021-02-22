@@ -6,11 +6,17 @@ services:
     volumes:
       - ./htdocs:/usr/share/nginx/htdocs
       - ./nginx:/etc/nginx/conf.d
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.hwphp.rule=Host(`hwphp.local`)"
+      - "traefik.http.routers.hwphp.entrypoints=web"
+      - "traefik.http.services.hwphp.loadbalancer.server.port=80"
+      - "traefik.tcp.services.hwphp.loadbalancer.server.port=443"
     links:
       - php-helloworldphp
 
   php-helloworldphp:
-    image: php:8.0
+    image: php:8.0-fpm
     volumes:
       - ./htdocs:/usr/share/nginx/htdocs
 
