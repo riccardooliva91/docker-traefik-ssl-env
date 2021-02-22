@@ -24,22 +24,9 @@ while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in
 	-d | --down )
 		docker_compose_down
 		;;
-	-ci | --composer-install )
-		docker_compose_composer_install
-		;;
-	-ni | --npm-install )
-		docker_compose_npm_install
-		;;
-	-e | --exec )
-		shift;
-		docker_compose_exec $*
-		;;
-	-tc | --theme-composer )
-		shift;
-		docker_compose_theme_composer $*
-		;;
-	--status )
-		docker ps
+	-ci | --restart-hard )
+		docker_compose_down
+		docker_compose_up
 		;;
 esac; shift; done
 if [[ "$1" == '--' ]]; then shift; fi
