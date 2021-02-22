@@ -3,7 +3,7 @@
 ABSPATH="${0%/*}/.."
 CURRENT_OS=$(uname -s)
 FOLDERS=`find -maxdepth 1 -type d ! -path . ! -path ./dumps ! -path ./.idea ! -path ./.git ! -path ./bin`
-NETWORK_NAME="traefik_web"
+source "${ABSPATH}/.env"
 
 function replace_in_file() {
 	if [[ "$CURRENT_OS" = 'Darwin' ]]; then
@@ -19,6 +19,12 @@ function docker_compose_up() {
 
 	replace_in_file "s#USER_ID=.*#USER_ID=${USER_ID}#" "${ABSPATH}/.env"
 	replace_in_file "s#GROUP_ID=.*#GROUP_ID=${GROUP_ID}#" "${ABSPATH}/.env"
+	if [[ -e "${ABSPATH}/traefik/traefik.yml" ]]; then
+	  rm "${ABSPATH}/traefik/traefik.yml"
+  fi
+  cp "${ABSPATH}/traefik/traefik.yml.example" "${ABSPATH}/traefik/traefik.yml"
+	replace_in_file "s#dashboard: .*#dashboard: ${TRAEFIK_DASHBOARD}#" "${ABSPATH}/traefik/traefik.yml"
+	replace_in_file "s#insecure: .*#insecure: ${TRAEFIK_DASHBOARD_INSECURE}#" "${ABSPATH}/traefik/traefik.yml"
 
 	if [[ -z "$(docker network ls -q -f name=$NETWORK_NAME)" ]]; then
 		docker network create $NETWORK_NAME
