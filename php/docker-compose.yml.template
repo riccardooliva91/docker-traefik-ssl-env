@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  nginx-helloworldphp:
+    image: nginx:1.19.7
+    volumes:
+      - ./htdocs:/usr/share/nginx/htdocs
+      - ./nginx:/etc/nginx/conf.d
+    links:
+      - php-helloworldphp
+
+  php-helloworldphp:
+    image: php:8.0
+    volumes:
+      - ./htdocs:/usr/share/nginx/htdocs
+
+networks:
+  default:
+    external:
+      name: WEBNETWORKNAME
