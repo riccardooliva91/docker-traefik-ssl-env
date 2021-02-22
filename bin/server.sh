@@ -8,7 +8,7 @@ if [[ ! -e "$ENV_FILE_PATH" ]]; then
 	cp .env.example .env
 fi
 
-prepare_env
+prepare_env $ENV_FILE_PATH
 source $ENV_FILE_PATH
 
 while [[ "$1" =~ ^- && ! "$1" == "--" ]]; do case $1 in

@@ -3,7 +3,10 @@
 ABSPATH="${0%/*}/.."
 CURRENT_OS=$(uname -s)
 FOLDERS=`find -maxdepth 1 -type d ! -path . ! -path ./dumps ! -path ./.idea ! -path ./.git ! -path ./bin`
-source "${ABSPATH}/.env"
+
+if [[ -e "${ABSPATH}/.env" ]]; then
+  source "${ABSPATH}/.env"
+fi
 
 function replace_in_file() {
 	if [[ "$CURRENT_OS" = 'Darwin' ]]; then
@@ -64,8 +67,9 @@ function docker_compose_restart() {
 
 function prepare_env() {
    # Env replaces
-	replace_in_file "s#USER_ID=.*#USER_ID=$(id -u)#" "${ABSPATH}/.env"
-	replace_in_file "s#GROUP_ID=.*#GROUP_ID=$(id -g)#" "${ABSPATH}/.env"
+	replace_in_file "s#USER_ID=.*#USER_ID=$(id -u)#" "$1"
+	replace_in_file "s#GROUP_ID=.*#GROUP_ID=$(id -g)#" "$1"
+	# Traefik yaml replaces, this kinda counts as the env
 	if [[ -e "${ABSPATH}/traefik/traefik.yml" ]]; then
 	  rm "${ABSPATH}/traefik/traefik.yml"
   fi
