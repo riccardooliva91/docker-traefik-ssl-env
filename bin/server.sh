@@ -5,7 +5,6 @@ source "${0%/*}/functions.sh"
 ENV_FILE_PATH="${0%/*}/../.env"
 
 if [[ ! -e "$ENV_FILE_PATH" ]]; then
-	echo "File .env not found creating it from .env.example"
 	cp .env.example .env
 fi
 
