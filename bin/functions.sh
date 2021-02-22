@@ -14,13 +14,6 @@ function replace_in_file() {
 }
 
 function docker_compose_up() {
-  # Env replaces
-	replace_in_file "s#USER_ID=.*#USER_ID=${USER_ID}#" "${ABSPATH}/.env"
-	replace_in_file "s#GROUP_ID=.*#GROUP_ID=${GROUP_ID}#" "${ABSPATH}/.env"
-	if [[ -e "${ABSPATH}/traefik/traefik.yml" ]]; then
-	  rm "${ABSPATH}/traefik/traefik.yml"
-  fi
-
   # Traefik template preparation
   cp "${ABSPATH}/traefik/traefik.yml.template" "${ABSPATH}/traefik/traefik.yml"
 	replace_in_file "s#dashboard: .*#dashboard: ${TRAEFIK_DASHBOARD}#" "${ABSPATH}/traefik/traefik.yml"
@@ -67,4 +60,13 @@ function docker_compose_restart() {
 	do
 		docker-compose -f $FOLDER/docker-compose.yml restart
 	done
+}
+
+function prepare_env() {
+   # Env replaces
+	replace_in_file "s#USER_ID=.*#USER_ID=$(id -u)#" "${ABSPATH}/.env"
+	replace_in_file "s#GROUP_ID=.*#GROUP_ID=$(id -g)#" "${ABSPATH}/.env"
+	if [[ -e "${ABSPATH}/traefik/traefik.yml" ]]; then
+	  rm "${ABSPATH}/traefik/traefik.yml"
+  fi
 }
